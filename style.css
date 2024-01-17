@@ -61,24 +61,30 @@ footer {
     width: 650px;
     height: 650px;
     margin: 60px auto;
+
     display: flex;
     flex-wrap: wrap;
     align-content: flex-start;
 }
 
 #grid .cell {
-    width: calc(100% / 10);
-    height: calc(100% / 10);
+    width: 10%;
+    height: 10%;
     border: 1px solid black;
     cursor: pointer;
+
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 1.5rem;
 }
 
-.cell.clicked {
+#grid .cell.clicked {
     cursor: not-allowed;
     background-color: aqua;
+}
+
+#grid .cell.clicked.bomb {
+    background-color: red;
 }
 

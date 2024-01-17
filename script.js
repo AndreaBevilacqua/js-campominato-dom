@@ -1,17 +1,14 @@
 // Recupero gli elementi dal dom
 const grid = document.getElementById('grid');
-const button = document.querySelector('button');
+const button = document.getElementById('play-button');
 const scoreDisplay = document.getElementById('score');
 
 // ~ Funzioni generali
 
 const startGame = event => {
 
-    // ! Impedisco il reload della pagina
-    if (event) event.preventDefault();
-}
-
-// ~ Funzioni specifiche
+    // Preparo il flag
+    let isGameOver = false;
 
     // Funzione per generare la cella 
     const createCell = cellNumber => {
@@ -21,9 +18,11 @@ const startGame = event => {
         return cell;
     }
 
+    // ~ Funzioni specifiche
+
     const generateBombs = (maxBombNumber, totalBombs) => {
         const bombs = [];
-        while (bombs.lenght < totalBombs) {
+        while (bombs.length < totalBombs) {
             const randomNumber = Math.floor(Math.random() * maxBombNumber) + 1;
             if (!bombs.includes(randomNumber)) bombs.push(randomNumber);
         }
@@ -38,71 +37,70 @@ const startGame = event => {
         alert(message);
     }
 
-    
-// ^ --------------------
-// ^ OPERAZIONI INIZIALI
-// ^ --------------------
+    //  ~ ----------------------
+    //  ~  SVOLGIMENTO ESERCIZIO
+    //  ~ ----------------------
 
-// Cambio il testo del bottone
-button.innerText = 'Rigioca';
+    // Cambio il testo del bottone
+    button.innerText = 'Rigioca';
 
-// Svuota il contenuto 
-grid.innerText = '';
+    // Svuota il contenuto 
+    grid.innerText = '';
 
-//  Dati per la griglia e le bombe all'interno
-const rows = 10;
-const cols = 10;
-let totalBombs = 16;
-const totalCells = rows * cols;
+    // ^ --------------------
+    // ^ OPERAZIONI INIZIALI
+    // ^ --------------------
 
-// Assegno una variabile per il punteggio 
-let score = 0;
-scoreDisplay.innerText = score;
+    //  Dati per la griglia e le bombe all'interno
+    const rows = 10;
+    const cols = 10;
+    let totalBombs = 16;
+    const totalCells = rows * cols;
 
-// Creo una variabile per il punteggio massimo
-const maxPoints = totalCells - totalBombs;
+    // Assegno una variabile per il punteggio 
+    let score = 0;
+    scoreDisplay.innerText = score;
 
-// Genero le bombe attraverso una funzione
-const bombs = generateBombs(totalCells, totalBombs);
+    // Creo una variabile per il punteggio massimo
+    const maxPoints = totalCells - totalBombs;
 
-// ~ ----------------------
-// ~  SVOLGIMENTO ESERCIZIO
-// ~ ----------------------
+    // Genero le bombe attraverso una funzione
+    const bombs = generateBombs(totalCells, totalBombs);
 
-for (let i = 1; i <= totalCells; i++) {
-    // Creo una cella
-    const cell = createCell(i);
-    
-    // Rendo la cella cliccabile
-    cell.addEventListener('click', () => {
+    // Genero le celle e le inserisco in pagina
+    for (let i = 1; i <= totalCells; i++) {
 
-        // ! Controlla se la cella é stata cliccata 
-        if (cell.classList.contains('clicked')) return;
+        // Creo la cella 
+        const cell = createCell(i);
 
-        // Aggiungo la classe clicked
-        cell.classList.add('clicked');
+        // Rendo la cella cliccabile
+        cell.addEventListener('click', () => {
 
-        // Stampo il numero in console con ún messaggio appropriato 
-        console.log(`Hai cliccato la cella numero ${i}`);
+            
+            if (isGameOver || cell.classList.contains('clicked')) return;
+            cell.classList.add('clicked');
+            
+            console.log(i);
 
-        // Controllo se é stata cliccata una cella 
-        const isBombClicked = bombs.includes(i);
+            const isBombClicked = bombs.includes(i);
 
-        // Controllo se l'utente ha perso o vinto'
-        if(isBombClicked) {
-            gameOver(score, bombs, false)
-        } else {
-            scoreDisplay.innerText = ++score;
+            if(isBombClicked) {
+                cell.classList.add('bomb');
+              endGame(score, bombs, false)
+              isGameOver = true;
+              } else {
+             scoreDisplay.innerText = ++score;
+                
+               if (score === maxPoints){
+               endGame(score, bombs, true)
+             }
+        }});
 
-            if (score === maxPoints){
-                endGame(score, bombs, true)
-            }
-        }
-    }
-    );
+        // Inserisco la cella in pagina 
         grid.appendChild(cell);
-}
-    
+    }
+
+}  
 
 // ! =====================
 // ! PER INIZIARE IL GIOCO
