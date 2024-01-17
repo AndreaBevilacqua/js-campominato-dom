@@ -32,7 +32,7 @@ const startGame = event => {
     const endGame = (score, bombs, isWin = false) => {
         const message = isWin
         ? `Hai vinto! :D`
-        : `Hai perso! :C Hai totalizzato ${score}punti.`
+        : `Hai perso! :C Hai totalizzato ${score} punti.`
 
         alert(message);
     }
